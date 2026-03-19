@@ -18,6 +18,7 @@
 
 package hu.zoldleo.endersourcejars.blocks;
 
+import codechicken.enderstorage.api.Frequency;
 import codechicken.enderstorage.config.EnderStorageConfig;
 import codechicken.enderstorage.tile.TileFrequencyOwner;
 import codechicken.lib.colour.EnumColour;
@@ -63,6 +64,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -72,6 +75,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -232,6 +236,27 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
         if (world.getBlockEntity(pos) instanceof TileFrequencyOwner tile) {
             tile.onPlaced(placer);
         }
+    }
+
+    @Override
+    public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.Builder builder) {
+        List<ItemStack> drops = new ArrayList<>();
+        EnderSourceJarEntity tile = (EnderSourceJarEntity) builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (tile != null) {
+            drops.add(createItem(tile.getFrequency()));
+            if (EnderStorageConfig.anarchyMode && tile.getFrequency().hasOwner())
+                drops.add(EnderStorageConfig.getPersonalItem().copy());
+        }
+        return drops;
+    }
+
+    @SuppressWarnings("deprecation")
+    private ItemStack createItem(Frequency freq) {
+        if (EnderStorageConfig.anarchyMode)
+            freq = freq.withoutOwner();
+        ItemStack stack = new ItemStack(this, 1);
+        freq.writeToStack(stack);
+        return stack;
     }
 
     static {

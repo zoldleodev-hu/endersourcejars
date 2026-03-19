@@ -20,6 +20,7 @@ package hu.zoldleo.endersourcejars;
 
 import codechicken.enderstorage.api.Frequency;
 import codechicken.enderstorage.manager.EnderStorageManager;
+import codechicken.lib.colour.EnumColour;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJar;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarRenderer;
@@ -52,6 +53,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static codechicken.enderstorage.init.EnderStorageModContent.FREQUENCY_DATA_COMPONENT;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @SuppressWarnings("all")
@@ -106,7 +109,11 @@ public class EnderSourceJars {
 
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(ENDER_SOURCE_JAR_ITEM);
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            ItemStack stack = new ItemStack(ENDER_SOURCE_JAR_ITEM.get());
+            stack.set(FREQUENCY_DATA_COMPONENT, new Frequency(EnumColour.WHITE, EnumColour.WHITE, EnumColour.WHITE));
+            event.accept(stack);
+        }
     }
 
     private void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
