@@ -29,13 +29,11 @@ import hu.zoldleo.endersourcejars.storage.EnderSourceStoragePlugin;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -51,8 +49,6 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static codechicken.enderstorage.init.EnderStorageModContent.FREQUENCY_DATA_COMPONENT;
 
@@ -75,13 +71,6 @@ public class EnderSourceJars {
                 return flag;
             tile.setFreq(Frequency.readFromStack(stack));
             return true;
-        }
-
-        @Override
-        public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext ctx, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-            Frequency frequency = Frequency.readFromStack(stack);
-            frequency.ownerName().ifPresent(tooltip::add);
-            tooltip.add(frequency.getTooltip());
         }
     });
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnderSourceJarEntity>> ENDER_SOURCE_JAR_TILE = BLOCK_ENTITY_TYPES.register("endersourcejar", () ->

@@ -20,6 +20,7 @@ package hu.zoldleo.endersourcejars.blocks;
 
 import codechicken.enderstorage.api.Frequency;
 import codechicken.enderstorage.config.EnderStorageConfig;
+import codechicken.enderstorage.manager.EnderStorageManager;
 import codechicken.enderstorage.tile.TileFrequencyOwner;
 import codechicken.lib.colour.EnumColour;
 import codechicken.lib.raytracer.IndexedVoxelShape;
@@ -33,8 +34,8 @@ import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Translation;
 import com.google.common.collect.ImmutableSet;
 import com.hollingsworth.arsnouveau.common.block.ModBlock;
-import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import hu.zoldleo.endersourcejars.storage.EnderSourceStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -51,6 +52,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -78,6 +80,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static hu.zoldleo.endersourcejars.EnderSourceJars.ENDER_SOURCE_JAR_TILE;
 
 public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, EntityBlock {
     private static final IndexedVoxelShape jar = new IndexedVoxelShape(Stream.of(
@@ -166,11 +170,14 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
         return 0;
     }
 
-    public void appendHoverText(@NotNull ItemStack stack, @javax.annotation.Nullable Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        assert context != null;
+    @SuppressWarnings("deprecation")
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        int mana = BlockFillContents.get(stack);
+        Frequency frequency = Frequency.readFromStack(stack);
+        int mana = EnderStorageManager.instance(true).getStorage(frequency, EnderSourceStorage.TYPE).getStorage().getSource();
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", mana * 100 / 10000));
+        frequency.ownerName().ifPresent(tooltip::add);
+        tooltip.add(frequency.getTooltip());
     }
 
     public boolean isPathfindable(@NotNull BlockState pState, @NotNull PathComputationType pType) {
@@ -256,6 +263,13 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
             freq = freq.withoutOwner();
         ItemStack stack = new ItemStack(this, 1);
         freq.writeToStack(stack);
+        return stack;
+    }
+
+    @Override
+    public @NotNull ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult hit, @NotNull LevelReader reader, @NotNull BlockPos pos, @NotNull Player player) {
+        ItemStack stack = super.getCloneItemStack(state, hit, reader, pos, player);
+        reader.getBlockEntity(pos, ENDER_SOURCE_JAR_TILE.get()).ifPresent((entity) -> entity.saveToItem(stack, reader.registryAccess()));
         return stack;
     }
 
