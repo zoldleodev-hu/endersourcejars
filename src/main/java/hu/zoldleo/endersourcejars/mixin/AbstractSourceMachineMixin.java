@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(AbstractSourceMachine.class)
 public class AbstractSourceMachineMixin {
     @Redirect(method = "applyImplicitComponents", at = @At(value = "INVOKE", target = "Lcom/hollingsworth/arsnouveau/common/capability/SourceStorage;setSource(I)V"))
-    void asd(SourceStorage instance, int source) {
+    void skipEnderJar(SourceStorage instance, int source) {
         if ((Object)this instanceof EnderSourceJarEntity)
             return;
         instance.setSource(source);
