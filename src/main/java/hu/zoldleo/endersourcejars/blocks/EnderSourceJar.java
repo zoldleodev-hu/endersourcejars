@@ -52,7 +52,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -80,8 +79,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static hu.zoldleo.endersourcejars.EnderSourceJars.ENDER_SOURCE_JAR_TILE;
 
 public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, EntityBlock {
     private static final IndexedVoxelShape jar = new IndexedVoxelShape(Stream.of(
@@ -263,13 +260,6 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
             freq = freq.withoutOwner();
         ItemStack stack = new ItemStack(this, 1);
         freq.writeToStack(stack);
-        return stack;
-    }
-
-    @Override
-    public @NotNull ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult hit, @NotNull LevelReader reader, @NotNull BlockPos pos, @NotNull Player player) {
-        ItemStack stack = super.getCloneItemStack(state, hit, reader, pos, player);
-        reader.getBlockEntity(pos, ENDER_SOURCE_JAR_TILE.get()).ifPresent((entity) -> entity.saveToItem(stack, reader.registryAccess()));
         return stack;
     }
 
