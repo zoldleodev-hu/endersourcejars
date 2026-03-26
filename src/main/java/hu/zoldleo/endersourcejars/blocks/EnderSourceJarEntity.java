@@ -31,7 +31,6 @@ import hu.zoldleo.endersourcejars.storage.EnderSourceStorage;
 import hu.zoldleo.endersourcejars.storage.SourceStorageUpdateEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
@@ -42,8 +41,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
-import static codechicken.enderstorage.init.EnderStorageModContent.FREQUENCY_DATA_COMPONENT;
 
 public class EnderSourceJarEntity extends SourceJarTile {
     private Frequency frequency = new Frequency();
@@ -113,7 +110,6 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     public void onFrequencySet() {
         invalidateCapabilities();
-        applyComponents(collectComponents(), DataComponentPatch.builder().set(FREQUENCY_DATA_COMPONENT.get(), frequency).build());
     }
 
     protected void sendUpdatePacket() {

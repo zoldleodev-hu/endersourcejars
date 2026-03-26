@@ -52,6 +52,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -252,6 +253,13 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
                 drops.add(EnderStorageConfig.getPersonalItem().copy());
         }
         return drops;
+    }
+
+    @Override
+    public @NotNull ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult rayTraceResult, LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
+        if (world.getBlockEntity(pos) instanceof EnderSourceJarEntity tile)
+            return createItem(tile.getFrequency());
+        return ItemStack.EMPTY;
     }
 
     @SuppressWarnings("deprecation")
