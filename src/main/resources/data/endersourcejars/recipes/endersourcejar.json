@@ -1,0 +1,39 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "endersourcejars:endersourcejar"
+  },
+  "pedestalItems": [
+    {
+      "tag": "forge:wool"
+    },
+    {
+      "item": "minecraft:blaze_rod"
+    },
+    {
+      "tag": "forge:obsidian"
+    },
+    {
+      "item": "minecraft:blaze_rod"
+    },
+    {
+      "tag": "forge:ender_pearls"
+    },
+    {
+      "item": "minecraft:blaze_rod"
+    },
+    {
+      "tag": "forge:obsidian"
+    },
+    {
+      "item": "minecraft:blaze_rod"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:source_jar"
+    }
+  ],
+  "sourceCost": 9000
+}
