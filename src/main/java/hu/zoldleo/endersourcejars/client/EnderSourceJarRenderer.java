@@ -16,7 +16,7 @@
 //
 //  zoldleo.dev@gmail.com
 
-package hu.zoldleo.endersourcejars.blocks;
+package hu.zoldleo.endersourcejars.client;
 
 import codechicken.enderstorage.api.Frequency;
 import codechicken.enderstorage.client.model.ButtonModelLibrary;
@@ -35,6 +35,7 @@ import codechicken.lib.vec.uv.UVTranslation;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import hu.zoldleo.endersourcejars.EnderSourceJars;
+import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -154,6 +155,7 @@ public class EnderSourceJarRenderer implements BlockEntityRenderer<EnderSourceJa
         CCModelLibrary.icosahedron4.render(ccrs, pearlMat);
     }
 
+    @SuppressWarnings("all")
     private static CCModel genModel(double v) {
         CCModel model = CCModel.quadModel(20);
         Vector3 min = new Vector3(4.0 / 16.0, 2.0 / 16.0, 4 / 16.0);
@@ -204,6 +206,7 @@ public class EnderSourceJarRenderer implements BlockEntityRenderer<EnderSourceJa
         return model.computeNormals();
     }
 
+    @SuppressWarnings("all")
     private static CCModel genLid() {
         CCModel model = CCModel.quadModel(56);
 

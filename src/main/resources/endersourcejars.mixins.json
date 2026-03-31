@@ -4,7 +4,8 @@
   "package": "hu.zoldleo.endersourcejars.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractSourceMachineMixin"
+    "AbstractSourceMachineMixin",
+    "ars_creo.ContraptionUtilsMixin"
   ],
   "client": [
   ],

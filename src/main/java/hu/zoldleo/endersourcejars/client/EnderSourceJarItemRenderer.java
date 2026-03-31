@@ -16,7 +16,7 @@
 //
 //  zoldleo.dev@gmail.com
 
-package hu.zoldleo.endersourcejars.blocks;
+package hu.zoldleo.endersourcejars.client;
 
 import codechicken.enderstorage.api.Frequency;
 import codechicken.enderstorage.manager.EnderStorageManager;

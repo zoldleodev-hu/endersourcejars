@@ -23,7 +23,8 @@ import codechicken.enderstorage.manager.EnderStorageManager;
 import codechicken.lib.colour.EnumColour;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJar;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
-import hu.zoldleo.endersourcejars.blocks.EnderSourceJarRenderer;
+import hu.zoldleo.endersourcejars.client.EnderSourceJarRenderer;
+import hu.zoldleo.endersourcejars.compat.CreateCompat;
 import hu.zoldleo.endersourcejars.network.JarNetwork;
 import hu.zoldleo.endersourcejars.storage.EnderSourceStoragePlugin;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -40,7 +41,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -52,7 +55,6 @@ import org.jetbrains.annotations.Nullable;
 
 import static codechicken.enderstorage.init.EnderStorageModContent.FREQUENCY_DATA_COMPONENT;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @SuppressWarnings("all")
 @Mod(EnderSourceJars.MODID)
 public class EnderSourceJars {
@@ -77,26 +79,25 @@ public class EnderSourceJars {
             BlockEntityType.Builder.of(EnderSourceJarEntity::new, ENDER_SOURCE_JAR_BLOCK.get()).build(null)
     );
 
-    // The constructor for the mod class is the first code that is run when your mod is loaded.
-    // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public EnderSourceJars(IEventBus modEventBus) {
-
-        // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
 
         BLOCK_ENTITY_TYPES.register(modEventBus);
 
         EnderStorageManager.registerPlugin(new EnderSourceStoragePlugin());
 
-        // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::onRegisterRenderers);
+        modEventBus.addListener(this::commonSetup);
         JarNetwork.init(modEventBus);
     }
 
-    // Add the example block item to the building blocks tab
+    private void commonSetup(FMLCommonSetupEvent event) {
+        if (ModList.get().isLoaded("ars_creo"))
+            CreateCompat.setup();
+    }
+
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             ItemStack stack = new ItemStack(ENDER_SOURCE_JAR_ITEM.get());

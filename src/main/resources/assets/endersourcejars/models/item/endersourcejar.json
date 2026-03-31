@@ -1,5 +1,5 @@
 {
   "parent": "minecraft:item/generated",
-  "class": "hu.zoldleo.endersourcejars.blocks.EnderSourceJarItemRenderer",
+  "class": "hu.zoldleo.endersourcejars.client.EnderSourceJarItemRenderer",
   "loader": "codechickenlib:class"
 }
