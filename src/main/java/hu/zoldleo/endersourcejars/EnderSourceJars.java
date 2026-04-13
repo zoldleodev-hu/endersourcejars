@@ -42,7 +42,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -115,8 +114,7 @@ public class EnderSourceJars {
         BlockEntityRenderers.register(ENDER_SOURCE_JAR_TILE.get(), EnderSourceJarRenderer::new);
     }
 
-    @SubscribeEvent
-    public static void onBreakEvent(BlockEvent.BreakEvent event) {
+    private static void onBreakEvent(BlockEvent.BreakEvent event) {
         BlockEntity tile = event.getLevel().getBlockEntity(event.getPos());
         if (tile instanceof EnderSourceJarEntity jarTile)
             NeoForge.EVENT_BUS.unregister(jarTile);
