@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "endersourcejars.refmap.json",
   "mixins": [
+    "ars_creo.ContraptionUtilsMixin"
   ],
   "client": [
   ],

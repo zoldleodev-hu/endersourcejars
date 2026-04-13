@@ -34,15 +34,18 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class EnderSourceJarEntity extends SourceJarTile {
     private Frequency frequency = new Frequency();
 
     public EnderSourceJarEntity(BlockPos pos, BlockState state) {
         super(EnderSourceJars.ENDER_SOURCE_JAR_TILE.get(), pos, state);
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(this::onSourceStorageUpdate);
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(this);
     }
 
     @Override
@@ -146,9 +149,17 @@ public class EnderSourceJarEntity extends SourceJarTile {
         setChanged();
     }
 
+    @SubscribeEvent
     public void onSourceStorageUpdate(SourceStorageUpdateEvent event) {
-        if (level == null || !event.getFrequency().equals(frequency))
+        if (level == null || !isSameFrequency(event.getFrequency(), frequency))
             return;
         setChanged();
+    }
+
+    private static boolean isSameFrequency(Frequency freq1, Frequency freq2) {
+        return freq1.left == freq2.left &&
+                freq1.middle == freq2.middle &&
+                freq1.right == freq2.right &&
+                Objects.equals(freq1.owner, freq2.owner);
     }
 }

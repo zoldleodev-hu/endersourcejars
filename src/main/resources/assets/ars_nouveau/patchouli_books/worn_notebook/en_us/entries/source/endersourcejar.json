@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "endersourcejars:endersourcejar",
+  "name": "block.endersourcejars.endersourcejar",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "endersourcejars.page.endersourcejar"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "endersourcejars:endersourcejar"
+    }
+  ]
+}

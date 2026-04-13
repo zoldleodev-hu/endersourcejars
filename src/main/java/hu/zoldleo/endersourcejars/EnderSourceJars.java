@@ -23,6 +23,7 @@ import codechicken.enderstorage.manager.EnderStorageManager;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJar;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarRenderer;
+import hu.zoldleo.endersourcejars.compat.CreateCompat;
 import hu.zoldleo.endersourcejars.network.JarNetwork;
 import hu.zoldleo.endersourcejars.storage.EnderSourceStoragePlugin;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -35,14 +36,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -67,6 +72,7 @@ public class EnderSourceJars {public static final String MODID = "endersourcejar
             return true;
         }
     });
+    @SuppressWarnings("all")
     public static final RegistryObject<BlockEntityType<EnderSourceJarEntity>> ENDER_SOURCE_JAR_TILE = BLOCK_ENTITY_TYPES.register("endersourcejar", () ->
             BlockEntityType.Builder.of(EnderSourceJarEntity::new, ENDER_SOURCE_JAR_BLOCK.get()).build(null)
     );
@@ -84,7 +90,14 @@ public class EnderSourceJars {public static final String MODID = "endersourcejar
 
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::onRegisterRenderers);
+        modEventBus.addListener(this::commonSetup);
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(EnderSourceJars::onBreakEvent);
         JarNetwork.init();
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+        if (ModList.get().isLoaded("ars_creo"))
+            CreateCompat.setup();
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
@@ -95,5 +108,11 @@ public class EnderSourceJars {public static final String MODID = "endersourcejar
 
     private void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         BlockEntityRenderers.register(ENDER_SOURCE_JAR_TILE.get(), EnderSourceJarRenderer::new);
+    }
+
+    private static void onBreakEvent(BlockEvent.BreakEvent event) {
+        BlockEntity tile = event.getLevel().getBlockEntity(event.getPos());
+        if (tile instanceof EnderSourceJarEntity jarTile)
+            Mod.EventBusSubscriber.Bus.FORGE.bus().get().unregister(jarTile);
     }
 }

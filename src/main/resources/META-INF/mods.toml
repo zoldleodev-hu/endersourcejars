@@ -75,3 +75,10 @@ mandatory = true
 versionRange="[2.11.0.188,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.endersourcejars]]
+modId="ars_creo"
+mandatory = false
+versionRange="[4.3.0,)"
+ordering="AFTER"
+side="BOTH"
