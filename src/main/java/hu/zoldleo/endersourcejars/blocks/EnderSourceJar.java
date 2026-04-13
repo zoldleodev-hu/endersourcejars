@@ -39,8 +39,6 @@ import hu.zoldleo.endersourcejars.storage.EnderSourceStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -144,15 +142,6 @@ public class EnderSourceJar extends ModBlock implements SimpleWaterloggedBlock, 
         }
 
         return stateIn;
-    }
-
-    public void tick(@NotNull BlockState p_222945_, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource p_222948_) {
-        super.tick(p_222945_, level, pos, p_222948_);
-        BlockEntity var6 = level.getBlockEntity(pos);
-        if (var6 instanceof EnderSourceJarEntity jarTile) {
-            jarTile.updateBlock();
-        }
-
     }
 
     public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
