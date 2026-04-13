@@ -37,6 +37,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +48,7 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     public EnderSourceJarEntity(BlockPos pos, BlockState state) {
         super(EnderSourceJars.ENDER_SOURCE_JAR_TILE.get(), pos, state);
-        NeoForge.EVENT_BUS.addListener(this::onSourceStorageUpdate);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -135,6 +136,7 @@ public class EnderSourceJarEntity extends SourceJarTile {
         setChanged();
     }
 
+    @SubscribeEvent
     public void onSourceStorageUpdate(SourceStorageUpdateEvent event) {
         if (level == null || !event.getFrequency().equals(frequency))
             return;

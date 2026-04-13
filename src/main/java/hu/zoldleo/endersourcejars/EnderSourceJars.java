@@ -36,16 +36,20 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -90,6 +94,7 @@ public class EnderSourceJars {
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::onRegisterRenderers);
         modEventBus.addListener(this::commonSetup);
+        NeoForge.EVENT_BUS.addListener(EnderSourceJars::onBreakEvent);
         JarNetwork.init(modEventBus);
     }
 
@@ -108,5 +113,12 @@ public class EnderSourceJars {
 
     private void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         BlockEntityRenderers.register(ENDER_SOURCE_JAR_TILE.get(), EnderSourceJarRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void onBreakEvent(BlockEvent.BreakEvent event) {
+        BlockEntity tile = event.getLevel().getBlockEntity(event.getPos());
+        if (tile instanceof EnderSourceJarEntity jarTile)
+            NeoForge.EVENT_BUS.unregister(jarTile);
     }
 }
