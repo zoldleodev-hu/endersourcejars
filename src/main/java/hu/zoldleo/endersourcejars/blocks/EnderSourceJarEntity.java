@@ -58,7 +58,8 @@ public class EnderSourceJarEntity extends SourceJarTile {
     }
 
     public void setFreq(Frequency frequency) {
-        assert level != null;
+        if (level == null)
+            return;
         this.frequency = frequency;
         onFrequencySet();
         setChanged();
@@ -103,22 +104,30 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     @Override
     public int getSource() {
-        return EnderStorageManager.instance(false).getStorage(frequency, EnderSourceStorage.TYPE).getSource();
+        if (level == null)
+            return 0;
+        return EnderStorageManager.instance(level.isClientSide).getStorage(frequency, EnderSourceStorage.TYPE).getSource();
     }
 
     @Override
     public int setSource(int source) {
-        return EnderStorageManager.instance(false).getStorage(frequency, EnderSourceStorage.TYPE).setSource(source);
+        if (level == null)
+            return 0;
+        return EnderStorageManager.instance(level.isClientSide).getStorage(frequency, EnderSourceStorage.TYPE).setSource(source);
     }
 
     @Override
     public int getMaxSource() {
-        return EnderStorageManager.instance(false).getStorage(frequency, EnderSourceStorage.TYPE).getMaxSource();
+        if (level == null)
+            return 0;
+        return EnderStorageManager.instance(level.isClientSide).getStorage(frequency, EnderSourceStorage.TYPE).getMaxSource();
     }
 
     @Override
     public void setMaxSource(int max) {
-        EnderStorageManager.instance(false).getStorage(frequency, EnderSourceStorage.TYPE).setMaxSource(max);
+        if (level == null)
+            return;
+        EnderStorageManager.instance(level.isClientSide).getStorage(frequency, EnderSourceStorage.TYPE).setMaxSource(max);
     }
 
     public void onFrequencySet() {
@@ -127,7 +136,8 @@ public class EnderSourceJarEntity extends SourceJarTile {
     }
 
     protected void sendUpdatePacket() {
-        assert level != null;
+        if (level == null)
+            return;
         createPacket().sendToChunk(this);
     }
 
@@ -144,7 +154,8 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     public void readFromPacket(MCDataInput packet) {
         frequency = Frequency.readFromPacket(packet);
-        assert level != null;
+        if (level == null)
+            return;
         onFrequencySet();
         setChanged();
     }
