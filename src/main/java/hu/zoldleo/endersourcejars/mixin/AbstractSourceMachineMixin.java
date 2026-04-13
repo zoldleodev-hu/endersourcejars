@@ -19,18 +19,25 @@
 package hu.zoldleo.endersourcejars.mixin;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractSourceMachine.class)
-public class AbstractSourceMachineMixin {
-    @Redirect(method = "applyImplicitComponents", at = @At(value = "INVOKE", target = "Lcom/hollingsworth/arsnouveau/common/capability/SourceStorage;setSource(I)V"))
-    void skipEnderJar(SourceStorage instance, int source) {
+public abstract class AbstractSourceMachineMixin extends BlockEntity {
+    public AbstractSourceMachineMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
+    @Inject(method = "applyImplicitComponents", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity$DataComponentInput;getOrDefault(Ljava/util/function/Supplier;Ljava/lang/Object;)Ljava/lang/Object;"), cancellable = true)
+    void skipEnderJar(DataComponentInput pComponentInput, CallbackInfo ci) {
         if ((Object)this instanceof EnderSourceJarEntity)
-            return;
-        instance.setSource(source);
+            ci.cancel();
     }
 }

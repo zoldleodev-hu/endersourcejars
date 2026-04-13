@@ -106,7 +106,9 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     @Override
     public @NotNull SourceStorage getSourceStorage() {
-        return EnderStorageManager.instance(false).getStorage(frequency, EnderSourceStorage.TYPE).getStorage();
+        if (level == null)
+            return new SourceStorage(0);
+        return EnderStorageManager.instance(level.isClientSide).getStorage(frequency, EnderSourceStorage.TYPE).getStorage();
     }
 
     public void onFrequencySet() {
