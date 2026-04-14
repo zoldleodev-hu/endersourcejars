@@ -32,6 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +46,19 @@ public class EnderSourceJarEntity extends SourceJarTile {
 
     public EnderSourceJarEntity(BlockPos pos, BlockState state) {
         super(EnderSourceJars.ENDER_SOURCE_JAR_TILE.get(), pos, state);
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(this);
+    }
+
+    @Override
+    public void setLevel(@NotNull Level level) {
+        super.setLevel(level);
+        if (!level.isClientSide)
+            Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(this);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().unregister(this);
     }
 
     @Override

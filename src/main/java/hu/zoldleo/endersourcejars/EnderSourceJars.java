@@ -36,14 +36,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -91,7 +89,6 @@ public class EnderSourceJars {public static final String MODID = "endersourcejar
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::onRegisterRenderers);
         modEventBus.addListener(this::commonSetup);
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(EnderSourceJars::onBreakEvent);
         JarNetwork.init();
     }
 
@@ -108,11 +105,5 @@ public class EnderSourceJars {public static final String MODID = "endersourcejar
 
     private void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         BlockEntityRenderers.register(ENDER_SOURCE_JAR_TILE.get(), EnderSourceJarRenderer::new);
-    }
-
-    private static void onBreakEvent(BlockEvent.BreakEvent event) {
-        BlockEntity tile = event.getLevel().getBlockEntity(event.getPos());
-        if (tile instanceof EnderSourceJarEntity jarTile)
-            Mod.EventBusSubscriber.Bus.FORGE.bus().get().unregister(jarTile);
     }
 }
