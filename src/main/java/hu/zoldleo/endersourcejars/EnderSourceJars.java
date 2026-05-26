@@ -25,6 +25,7 @@ import hu.zoldleo.endersourcejars.blocks.EnderSourceJar;
 import hu.zoldleo.endersourcejars.blocks.EnderSourceJarEntity;
 import hu.zoldleo.endersourcejars.client.EnderSourceJarRenderer;
 import hu.zoldleo.endersourcejars.compat.CreateCompat;
+import hu.zoldleo.endersourcejars.compat.CreoCompat;
 import hu.zoldleo.endersourcejars.network.JarNetwork;
 import hu.zoldleo.endersourcejars.storage.EnderSourceStoragePlugin;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -94,8 +95,10 @@ public class EnderSourceJars {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        if (ModList.get().isLoaded("ars_creo"))
+        if (ModList.get().isLoaded("ars_creo")) {
             CreateCompat.setup();
+            CreoCompat.registerSourceInfo();
+        }
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {

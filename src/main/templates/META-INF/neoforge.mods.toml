@@ -89,7 +89,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="ars_creo"
 type="optional"
-versionRange="[5.0.2,)"
+versionRange="[5.3.0,)"
 ordering="AFTER"
 side="BOTH"
 
